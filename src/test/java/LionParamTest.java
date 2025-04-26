@@ -7,6 +7,8 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/** Параметризованный тест для проверки наличия гривы у львов */
+
 public class LionParamTest {
 
     @ParameterizedTest
