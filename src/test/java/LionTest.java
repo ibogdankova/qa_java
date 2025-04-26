@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class LionTest {
@@ -31,10 +32,10 @@ class LionTest {
         int result = lion.getKittens();
         assertEquals(0, result, "Для самца льва должно возвращаться 0 котят");
         if (mockPredator instanceof Feline) {
-            Mockito.verify((Feline) mockPredator, Mockito.never()).getKittens();
+            verify((Feline) mockPredator, Mockito.never()).getKittens();
         }
     }
-    
+
 
     /*
      * Проверяет, что конструктор Lion выбрасывает исключение
@@ -45,5 +46,28 @@ class LionTest {
     void testInvalidSex() {
         Predator predator = Mockito.mock(Predator.class);
         assertThrows(Exception.class, () -> new Lion("Неизвестный", predator));
+    }
+    @Test
+    void getKittens_shouldDelegateToFelineForFemale() throws Exception {
+        Feline mockFeline = Mockito.mock(Feline.class);
+        when(mockFeline.getKittens()).thenReturn(2);
+
+        Lion lion = new Lion("Самка", mockFeline);
+        assertEquals(2, lion.getKittens());
+        verify(mockFeline).getKittens();
+    }
+
+    @Test
+    void doesHaveMane_shouldReturnTrueForMale() throws Exception {
+        Predator predator = Mockito.mock(Predator.class);
+        Lion lion = new Lion("Самец", predator);
+        assertTrue(lion.doesHaveMane());
+    }
+
+    @Test
+    void doesHaveMane_shouldReturnFalseForFemale() throws Exception {
+        Predator predator = Mockito.mock(Predator.class);
+        Lion lion = new Lion("Самка", predator);
+        assertFalse(lion.doesHaveMane());
     }
 }
