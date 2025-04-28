@@ -48,7 +48,7 @@ class LionTest {
         assertThrows(Exception.class, () -> new Lion("Неизвестный", predator));
     }
     @Test
-    void getKittens_shouldDelegateToFelineForFemale() throws Exception {
+    void getKittensShouldDelegateToFelineForFemale() throws Exception {
         Feline mockFeline = Mockito.mock(Feline.class);
         when(mockFeline.getKittens()).thenReturn(2);
 
@@ -58,14 +58,14 @@ class LionTest {
     }
 
     @Test
-    void doesHaveMane_shouldReturnTrueForMale() throws Exception {
+    void doesHaveManeShouldReturnTrueForMale() throws Exception {
         Predator predator = Mockito.mock(Predator.class);
         Lion lion = new Lion("Самец", predator);
         assertTrue(lion.doesHaveMane());
     }
 
     @Test
-    void doesHaveMane_shouldReturnFalseForFemale() throws Exception {
+    void doesHaveManeShouldReturnFalseForFemale() throws Exception {
         Predator predator = Mockito.mock(Predator.class);
         Lion lion = new Lion("Самка", predator);
         assertFalse(lion.doesHaveMane());

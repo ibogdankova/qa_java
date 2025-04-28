@@ -29,7 +29,7 @@ class FelineTest {
         assertEquals(3, feline.getKittens(3));
     }
     @Test
-    void eatMeat_shouldThrowExceptionForUnknownAnimalType() {
+    void eatMeatShouldThrowExceptionForUnknownAnimalType() {
         Feline feline = new Feline();
         assertThrows(Exception.class, () -> feline.getFood("Неизвестный тип"));
     }
