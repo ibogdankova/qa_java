@@ -1,7 +1,6 @@
 
 import com.example.Feline;
 import com.example.Lion;
-import com.example.Predator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import java.util.List;
@@ -12,62 +11,65 @@ import static org.mockito.Mockito.when;
 class LionTest {
 
     /**
-     * Проверяет, что метод getFood() возвращает корректный список еды для льва,
-     * соответствующий рациону хищника
+     * Проверяет, что метод getFood() возвращает корректный список еды для льва
      */
 
     @Test
     void testGetFood() throws Exception {
-        Predator predator = Mockito.mock(Predator.class);
-        when(predator.eatMeat()).thenReturn(List.of("Животные", "Птицы", "Рыба"));
-
-        Lion lion = new Lion("Самец", predator);
-        assertEquals(List.of("Животные", "Птицы", "Рыба"), lion.getFood());
+        Feline feline = Mockito.mock(Feline.class);
+        when(feline.eatMeat()).thenReturn(List.of("Животные", "Птицы", "Рыба"));
+        Lion lion = new Lion("Самец", feline);
+        List<String> food = lion.getFood();
+        assertEquals(List.of("Животные", "Птицы", "Рыба"), food);
+        verify(feline).eatMeat();
     }
+
+    /**
+     * Проверяет, что метод getKittens() делегирует вызов объекту Feline
+     */
 
     @Test
-    void getKittensShouldReturnZeroForMaleLion() throws Exception {
-        Predator mockPredator = Mockito.mock(Predator.class);
-        Lion lion = new Lion("Самец", mockPredator);
+    void getKittensShouldDelegateToFeline() throws Exception {
+        Feline feline = Mockito.mock(Feline.class);
+        when(feline.getKittens()).thenReturn(2);
+        Lion lion = new Lion("Самка", feline);
         int result = lion.getKittens();
-        assertEquals(0, result, "Для самца льва должно возвращаться 0 котят");
-        if (mockPredator instanceof Feline) {
-            verify((Feline) mockPredator, Mockito.never()).getKittens();
-        }
+        assertEquals(2, result);
+        verify(feline).getKittens();
     }
 
-
-    /*
-     * Проверяет, что конструктор Lion выбрасывает исключение
-     * при передаче невалидного значения пола
+    /**
+     * Проверяет, что конструктор Lion выбрасывает исключени при передаче невалидного значения пола
      */
 
     @Test
     void testInvalidSex() {
-        Predator predator = Mockito.mock(Predator.class);
-        assertThrows(Exception.class, () -> new Lion("Неизвестный", predator));
+        Feline feline = Mockito.mock(Feline.class);
+        Exception exception = assertThrows(Exception.class,
+                () -> new Lion("Неизвестный", feline));
+        assertEquals("Используйте допустимые значения пола животного - самец или самка",
+                exception.getMessage());
     }
-    @Test
-    void getKittensShouldDelegateToFelineForFemale() throws Exception {
-        Feline mockFeline = Mockito.mock(Feline.class);
-        when(mockFeline.getKittens()).thenReturn(2);
 
-        Lion lion = new Lion("Самка", mockFeline);
-        assertEquals(2, lion.getKittens());
-        verify(mockFeline).getKittens();
-    }
+    /**
+     * Проверяет, что метод doesHaveMane() возвращает true для самцов
+     */
 
     @Test
     void doesHaveManeShouldReturnTrueForMale() throws Exception {
-        Predator predator = Mockito.mock(Predator.class);
-        Lion lion = new Lion("Самец", predator);
+        Feline feline = Mockito.mock(Feline.class);
+        Lion lion = new Lion("Самец", feline);
         assertTrue(lion.doesHaveMane());
     }
 
+    /**
+     * Проверяет, что метод doesHaveMane() возвращает false для самок
+     */
+
     @Test
     void doesHaveManeShouldReturnFalseForFemale() throws Exception {
-        Predator predator = Mockito.mock(Predator.class);
-        Lion lion = new Lion("Самка", predator);
+        Feline feline = Mockito.mock(Feline.class);
+        Lion lion = new Lion("Самка", feline);
         assertFalse(lion.doesHaveMane());
     }
 }
